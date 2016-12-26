@@ -4,7 +4,7 @@
 concourse_version: concourse/concourse
 concourse_user: concourse
 concourse_password: changeme
-concourse_url: "http://{{ ansible_default_ipv4['addres'] }}"
+concourse_url: "http://{{ ansible_default_ipv4['address'] }}"
 concourse_install_path: /usr/local/share/concourse
 concourse_log_path: /var/log/concourse
 
@@ -14,7 +14,8 @@ docker_version: "1.12.3-0~xenial"
 docker_compose_version: "1.8.0"
 docker_compose_path: "/usr/local/bin/docker-compose"
 
-loadbalancer_version:
+loadbalancer_version: nginx:1.11.7-alpine
+install_ssl: false
 
 db_version: postgres:9.5
 db_name: concourse

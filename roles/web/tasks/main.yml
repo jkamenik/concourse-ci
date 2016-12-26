@@ -1,0 +1,15 @@
+- name: Install dashboard manifest
+  template:
+    src: "docker-compose.yml.j2"
+    dest: "{{ concourse_install_path }}/docker-compose.yml"
+  notify: restart concourse
+
+- name: create loadbalancer dir
+  file:
+    name: "{{ concourse_install_path }}/loadbalancer"
+    state: directory
+
+- name: Render loadbalance conf from template
+  template: src=default.conf.j2
+            dest="{{ concourse_install_path }}/loadbalancer/default.conf"
+  notify: restart concourse

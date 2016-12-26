@@ -1,0 +1,31 @@
+server {
+    listen 80;
+{% if install_ssl %}
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen       443;
+{% endif %}
+    server_name  localhost;
+{% if install_ssl %}
+    ssl_certificate           /etc/nginx/ssl/{{combined_cert}};
+    ssl_certificate_key       /etc/nginx/ssl/{{ssl_key}};
+
+    ssl on;
+    ssl_session_cache  builtin:1000  shared:SSL:10m;
+    ssl_protocols  TLSv1 TLSv1.1 TLSv1.2;
+    ssl_ciphers HIGH:!aNULL:!eNULL:!EXPORT:!CAMELLIA:!DES:!MD5:!PSK:!RC4;
+    ssl_prefer_server_ciphers on;
+{% endif %}
+    access_log            /var/log/nginx/$host.access.log;
+
+    location / {
+        proxy_pass http://web;
+    }
+
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /usr/share/nginx/html;
+    }
+}
