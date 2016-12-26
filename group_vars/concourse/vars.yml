@@ -1,0 +1,8 @@
+---
+# the file containing the defaults
+
+# We always want to get the newest root certs
+docker_repo_version: "ubuntu-xenial"
+docker_version: "1.12.3-0~xenial"
+docker_compose_version: "1.8.0"
+docker_compose_path: "/usr/local/bin/docker-compose"

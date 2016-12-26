@@ -1,0 +1,14 @@
+---
+- hosts: concourse
+  gather_facts: no
+  become: yes
+  tasks:
+    # Ubuntu no longer comes with Python installed.  Fix this.
+    - name: install python
+      raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+
+- hosts: concourse
+  become: yes
+  roles:
+    - check-config
+    - docker

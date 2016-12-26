@@ -1,5 +1,4 @@
 ## Generated with generate-vagrant-inventory.yml
-## Adjust groups as needed
 
 {%- set web_hostname = ssh_config.results[0].stdout_lines[1].split(' ') | last %}
 {%- set web_user     = ssh_config.results[0].stdout_lines[2].split(' ') | last %}
@@ -11,30 +10,35 @@
 {%- set worker_port     = ssh_config.results[1].stdout_lines[3].split(' ') | last %}
 {%- set worker_key      = ssh_config.results[1].stdout_lines[7].split(' ') | last %}
 
-[concourse-web]
+## Edit these as needed
+[concourse:vars]
+private_docker_username=""
+private_docker_password=""
+
+[web]
 {{web_hostname}}
 
-[concourse-web:vars]
+[web:vars]
 ansible_user={{web_user}}
 ansible_port={{web_port}}
 ansible_ssh_private_key_file={{web_key}}
 
-[concourse-db:children]
-concourse-web
+[db:children]
+web
 
-[concourse-tsa:children]
-concourse-web
+[tsa:children]
+web
 
-[concourse-worker]
+[worker]
 {{worker_hostname}}
 
-[concourse-worker:vars]
+[worker:vars]
 ansible_user={{worker_user}}
 ansible_port={{worker_port}}
 ansible_ssh_private_key_file={{worker_key}}
 
 [concourse:children]
-concourse-web
-concourse-db
-concourse-tsa
-concourse-worker
+web
+db
+tsa
+worker

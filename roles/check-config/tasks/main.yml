@@ -1,0 +1,8 @@
+# Use this file to ensure required configurations have been provided.
+
+- name: Check docker settings
+  fail: msg="{{ item }} is not defined"
+  when: hostvars[inventory_hostname][item] is undefined or hostvars[inventory_hostname][item] == ""
+  with_items:
+    - private_docker_username
+    - private_docker_password

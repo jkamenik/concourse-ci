@@ -1,0 +1,45 @@
+---
+- include: docker-repo-hack.yml
+
+# [internal-cluster : Docker login] task fails due to missing pip module 'docker-py'
+- name: install pip
+  shell: "python <(curl https://bootstrap.pypa.io/get-pip.py)"
+  args:
+    executable: /bin/bash
+
+# Moreover there is a bug in check version logic in version 1.10. Force install 1.9
+# https://github.com/ansible/ansible/issues/17495
+- name: "install pip module 'docker-py 1.9'"
+  pip: name=docker-py
+       version=1.9.0
+
+
+- name: install docker
+  apt:
+    name: "docker-engine={{ docker_version }}"
+    state: present
+    update_cache: yes
+    force: yes
+
+- name: start docker
+  service:
+    enabled: yes
+    name: docker
+    state: started
+
+- name: Add user to docker group
+  user:
+    append: yes
+    groups: docker
+    name: "{{ ansible_user }}"
+
+- name: remove existing docker-compose
+  apt:
+    name: "docker-compose"
+    state: absent
+
+- name: Install docker compose
+  get_url:
+    url: "https://github.com/docker/compose/releases/download/{{ docker_compose_version }}/docker-compose-{{ ansible_system }}-{{ ansible_machine }}"
+    dest: "{{ docker_compose_path }}"
+    mode: 0755
