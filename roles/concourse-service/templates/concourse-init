@@ -1,0 +1,12 @@
+[Unit]
+Description=Dashboard
+Requires=docker.service
+After=docker.service
+
+[Service]
+Restart=always
+ExecStart="{{ docker_compose_path }}" -f {{ dashboard_install_path }}/docker-compose.yml up --force-recreate
+ExecStop="{{ docker_compose_path }}" -f {{ dashboard_install_path }}/docker-compose.yml stop
+
+[Install]
+WantedBy=multi-user.target

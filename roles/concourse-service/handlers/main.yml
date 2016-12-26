@@ -1,0 +1,6 @@
+- name: restart concourse
+  command: "{{ item }}"
+  with_items:
+    - /bin/systemctl daemon-reload
+    - /bin/systemctl restart concourse
+    - /bin/systemctl enable concourse
