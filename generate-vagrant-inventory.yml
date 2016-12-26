@@ -12,8 +12,8 @@
         - web
         - worker
 
-    - debug:
-        var: ssh_config
+    # - debug:
+    #     var: ssh_config
 
     - name: Write inventory
       template:
