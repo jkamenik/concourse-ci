@@ -1,0 +1,40 @@
+## Generated with generate-vagrant-inventory.yml
+## Adjust groups as needed
+
+{%- set web_hostname = ssh_config.results[0].stdout_lines[1].split(' ') | last %}
+{%- set web_user     = ssh_config.results[0].stdout_lines[2].split(' ') | last %}
+{%- set web_port     = ssh_config.results[0].stdout_lines[3].split(' ') | last %}
+{%- set web_key      = ssh_config.results[0].stdout_lines[7].split(' ') | last %}
+
+{%- set worker_hostname = ssh_config.results[1].stdout_lines[1].split(' ') | last %}
+{%- set worker_user     = ssh_config.results[1].stdout_lines[2].split(' ') | last %}
+{%- set worker_port     = ssh_config.results[1].stdout_lines[3].split(' ') | last %}
+{%- set worker_key      = ssh_config.results[1].stdout_lines[7].split(' ') | last %}
+
+[concourse-web]
+{{web_hostname}}
+
+[concourse-web:vars]
+ansible_user={{web_user}}
+ansible_port={{web_port}}
+ansible_ssh_private_key_file={{web_key}}
+
+[concourse-db:children]
+concourse-web
+
+[concourse-tsa:children]
+concourse-web
+
+[concourse-worker]
+{{worker_hostname}}
+
+[concourse-worker:vars]
+ansible_user={{worker_user}}
+ansible_port={{worker_port}}
+ansible_ssh_private_key_file={{worker_key}}
+
+[concourse:children]
+concourse-web
+concourse-db
+concourse-tsa
+concourse-worker

@@ -1,0 +1,21 @@
+- hosts: localhost
+  connection: local
+  gather_facts: false
+  tasks:
+    - name: Check vagrant running
+      shell: vagrant status | grep web | grep running
+
+    - name: vagrant ssh-config
+      command: vagrant ssh-config {{ item }}
+      register: ssh_config
+      with_items:
+        - web
+        - worker
+
+    - debug:
+        var: ssh_config
+
+    - name: Write inventory
+      template:
+        src:  vagrant-inventory.j2
+        dest: ./inventory/vagrant
