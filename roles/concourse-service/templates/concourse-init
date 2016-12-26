@@ -5,8 +5,8 @@ After=docker.service
 
 [Service]
 Restart=always
-ExecStart="{{ docker_compose_path }}" -f {{ dashboard_install_path }}/docker-compose.yml up --force-recreate
-ExecStop="{{ docker_compose_path }}" -f {{ dashboard_install_path }}/docker-compose.yml stop
+ExecStart="{{ docker_compose_path }}" -f {{ concourse_install_path }}/docker-compose.yml up --force-recreate
+ExecStop="{{ docker_compose_path }}" -f {{ concourse_install_path }}/docker-compose.yml stop
 
 [Install]
 WantedBy=multi-user.target
