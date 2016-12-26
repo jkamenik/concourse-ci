@@ -10,7 +10,6 @@
 - hosts: concourse
   become: yes
   roles:
-    - check-config
     - docker
 
 - hosts: web
