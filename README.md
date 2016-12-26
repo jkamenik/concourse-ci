@@ -26,9 +26,9 @@ After concourse is running the `fly` cli command can be downloaded from the UI. 
 
 # Providing the servers locally
 
-Run `vagrant up` and `ansible-playbook generate-vagrant-inventory.yml` to get an inventory that will work with vagrant.  Every time you star the VM up you will need to regenerate the vagrant inventory.
+Run `vagrant up web`, `vagrant up worker`, and `ansible-playbook generate-vagrant-inventory.yml` to get an inventory that will work with vagrant.  Every time you start the VMs up you will need to regenerate the vagrant inventory.
 
-To install concourse simply run `ansible-playbook -i /inventory/vagrant configure.yml`.  The vagrant VM will be running concourse.
+To install concourse simply run `ansible-playbook -i /inventory/vagrant configure.yml`.  The vagrant "web" VM will be running concourse ui.  Use `vagrant ssh web -c ifconfig` to figure out it's IP.
 
 # Providing the Servers for AWS
 
