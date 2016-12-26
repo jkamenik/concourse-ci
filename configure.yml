@@ -12,3 +12,13 @@
   roles:
     - check-config
     - docker
+
+- hosts: web
+  gather_facts: no
+  roles:
+    - web
+
+- hosts: worker
+  gather_facts: no
+  roles:
+    - worker

@@ -10,10 +10,9 @@
 {%- set worker_port     = ssh_config.results[1].stdout_lines[3].split(' ') | last %}
 {%- set worker_key      = ssh_config.results[1].stdout_lines[7].split(' ') | last %}
 
-## Edit these as needed
-[concourse:vars]
-private_docker_username=""
-private_docker_password=""
+## Override defaults here
+#[concourse:vars]
+#docker_version="*"
 
 [web]
 {{web_hostname}}
@@ -22,12 +21,6 @@ private_docker_password=""
 ansible_user={{web_user}}
 ansible_port={{web_port}}
 ansible_ssh_private_key_file={{web_key}}
-
-[db:children]
-web
-
-[tsa:children]
-web
 
 [worker]
 {{worker_hostname}}
@@ -39,6 +32,4 @@ ansible_ssh_private_key_file={{worker_key}}
 
 [concourse:children]
 web
-db
-tsa
 worker
