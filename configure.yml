@@ -14,12 +14,14 @@
 
 - hosts: web
   gather_facts: no
+  become: yes
   roles:
     - concourse-service
     - web
 
 - hosts: worker
   gather_facts: no
+  become: yes
   roles:
     - concourse-service
     - worker
