@@ -4,6 +4,7 @@
     state: directory
   with_items:
     - "{{ concourse_install_path }}"
+    - "{{ concourse_keys_path }}"
     - "{{ concourse_log_path }}"
 
 - name: Install service file

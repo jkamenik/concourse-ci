@@ -4,6 +4,22 @@
     dest: "{{ concourse_install_path }}/docker-compose.yml"
   notify: restart concourse
 
+- name: Install keys
+  copy:
+    src: "./keys/{{ item }}"
+    dest: "{{ concourse_keys_path }}"
+    mode: 0600
+  with_items:
+    - "tsa_host_key"
+    - "session_signing_key"
+    - "worker_key.pub"
+  notify: restart concourse
+
+- name: remake work authorized keys
+  command: cp worker_key.pub authorized_worker_keys
+  args:
+    chdir: "{{ concourse_keys_path }}"
+
 - name: create loadbalancer dir
   file:
     name: "{{ concourse_install_path }}/loadbalancer"
