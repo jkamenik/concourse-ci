@@ -1,0 +1,17 @@
+- debug: var=hostvars
+
+- name: Install dashboard manifest
+  template:
+    src: "docker-compose.yml.j2"
+    dest: "{{ concourse_install_path }}/docker-compose.yml"
+  notify: restart concourse
+
+- name: Install keys
+  copy:
+    src: "./keys/{{ item }}"
+    dest: "{{ concourse_keys_path }}"
+    mode: 0600
+  with_items:
+    - "tsa_host_key.pub"
+    - "worker_key"
+  notify: restart concourse

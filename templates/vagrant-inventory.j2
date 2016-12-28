@@ -10,28 +10,26 @@
 {%- set worker_port     = ssh_config.results[1].stdout_lines[3].split(' ') | last %}
 {%- set worker_key      = ssh_config.results[1].stdout_lines[7].split(' ') | last %}
 
-## Override defaults here
-#[concourse:vars]
+[concourse:vars]
+tsa_hostname=web
+## You can override others values as well.
 # docker_version="*"
 # concourse_version="concourse/concourse"
 # concourse_user="concourse"
 # concourse_password="changeme"
 
-
 [web]
-{{web_hostname}}
+web ansible_port={{web_port}} ansible_ssh_host={{web_hostname}}
 
 [web:vars]
 ansible_user={{web_user}}
-ansible_port={{web_port}}
 ansible_ssh_private_key_file={{web_key}}
 
 [worker]
-{{worker_hostname}}
+worker ansible_port={{worker_port}} ansible_ssh_host={{worker_hostname}}
 
 [worker:vars]
 ansible_user={{worker_user}}
-ansible_port={{worker_port}}
 ansible_ssh_private_key_file={{worker_key}}
 
 [concourse:children]
