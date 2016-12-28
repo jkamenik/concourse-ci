@@ -12,6 +12,7 @@
 
 [concourse:vars]
 tsa_hostname=web
+default_interface_name="ansible_{{ hostvars[inventory_hostname]['ansible_default_ipv4']['alias'] }}"
 ## You can override others values as well.
 # docker_version="*"
 # concourse_version="concourse/concourse"
