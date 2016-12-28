@@ -13,6 +13,7 @@
     - "tsa_host_key"
     - "session_signing_key"
     - "worker_key.pub"
+    - "worker_key"
   notify: restart concourse
 
 - name: remake work authorized keys

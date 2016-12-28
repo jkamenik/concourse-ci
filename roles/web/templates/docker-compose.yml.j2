@@ -26,11 +26,24 @@ services:
     image: {{ concourse_version }}
     links: [db]
     command: web
-    ports: ["8080:8080"]
+    ports:
+      - "2222:2222"
+      - "8080:8080"
     volumes: ["./keys:/concourse-keys"]
     environment:
       CONCOURSE_BASIC_AUTH_USERNAME: {{ concourse_user }}
       CONCOURSE_BASIC_AUTH_PASSWORD: {{ concourse_password }}
       CONCOURSE_EXTERNAL_URL: {{ concourse_url }}
+      CONCOURSE_TSA_HOST_KEY: /concourse-keys/tsa_host_key
       CONCOURSE_POSTGRES_DATA_SOURCE: |-
         postgres://{{ db_user }}:{{ db_password }}@db:5432/{{ db_name }}?sslmode=disable
+
+  worker:
+    image: {{ concourse_version }}
+    privileged: true
+    links: [web]
+    command: worker
+    volumes: ["./keys/worker:/concourse-keys"]
+    environment:
+      CONCOURSE_TSA_HOST: web
+      CONCOURSE_TSA_PUBLIC_KEY: /concourse-keys/tsa_host_key.pub
