@@ -21,7 +21,7 @@ server {
     access_log            /var/log/nginx/$host.access.log;
 
     location / {
-        proxy_pass http://web;
+        proxy_pass http://web:8080;
     }
 
     error_page   500 502 503 504  /50x.html;
