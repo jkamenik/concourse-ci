@@ -1,10 +1,8 @@
-- debug: var=hostvars
-
-- name: Install dashboard manifest
-  template:
-    src: "docker-compose.yml.j2"
-    dest: "{{ concourse_install_path }}/docker-compose.yml"
-  notify: restart concourse
+- name: Download concourse
+  get_url:
+    url: "https://github.com/concourse/concourse/releases/download/v{{ concourse_binary_version }}/concourse_linux_amd64"
+    dest: "{{ concourse_exec_path }}"
+    mode: 0755
 
 - name: Install keys
   copy:
@@ -15,3 +13,5 @@
     - "tsa_host_key.pub"
     - "worker_key"
   notify: restart concourse
+
+- include: service.yml

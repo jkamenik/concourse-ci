@@ -7,20 +7,14 @@
     - name: install python
       raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
 
-- hosts: concourse
+- hosts: web
   become: yes
   roles:
     - docker
-
-- hosts: web
-  gather_facts: no
-  become: yes
-  roles:
     - concourse-service
     - web
 
 - hosts: worker
-  gather_facts: no
   become: yes
   roles:
     - concourse-service

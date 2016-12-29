@@ -29,3 +29,5 @@
   template: src=default.conf.j2
             dest="{{ concourse_install_path }}/loadbalancer/default.conf"
   notify: restart concourse
+
+- include: service.yml

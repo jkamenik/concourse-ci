@@ -1,0 +1,13 @@
+[Unit]
+Description=Concourse Worker
+
+[Service]
+Restart=always
+ExecStart="{{ concourse_exec_path }}" worker \
+           --work-dir {{ concourse_install_path }} \
+           --tsa-host {{ tsa_default_interface_ip }} \
+           --tsa-public-key {{ concourse_keys_path }}/tsa_host_key.pub \
+           --tsa-worker-private-key {{ concourse_keys_path }}/worker_key
+
+[Install]
+WantedBy=multi-user.target

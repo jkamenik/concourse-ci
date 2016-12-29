@@ -1,0 +1,15 @@
+- name: Install web directories
+  file:
+    name: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ concourse_install_path }}"
+    - "{{ concourse_keys_path }}"
+    - "{{ concourse_log_path }}"
+
+- name: Install service file
+  template:
+    src: "concourse-init-web"
+    dest: /etc/systemd/system/concourse.service
+    mode: 0644
+  notify: restart concourse
