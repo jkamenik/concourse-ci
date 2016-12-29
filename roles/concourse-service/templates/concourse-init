@@ -1,5 +1,5 @@
 [Unit]
-Description=Dashboard
+Description=Concourse
 Requires=docker.service
 After=docker.service
 
