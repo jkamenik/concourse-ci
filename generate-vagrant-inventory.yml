@@ -12,10 +12,35 @@
         - web
         - worker
 
-    # - debug:
-    #     var: ssh_config
+    - name: add web host
+      add_host:
+        hostname:         "{{ item['name'] }}"
+        groups:           "{{ item['name'] }}"
+        ansible_ssh_host: "{{ item.value.stdout_lines[1].split(' ') | last }}"
+        ansible_user:     "{{ item.value.stdout_lines[2].split(' ') | last }}"
+        ansible_port:     "{{ item.value.stdout_lines[3].split(' ') | last }}"
+        ansible_ssh_private_key_file: "{{ item.value.stdout_lines[7].split(' ') | last }}"
+      with_items:
+        - name: web
+          value: "{{ ssh_config['results'][0] }}"
+        - name: worker
+          value: "{{ ssh_config['results'][1] }}"
+
+# Gather facts
+- hosts: web
+- hosts: worker
+
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  vars:
+    # override with
+    default_interface_name: 'ansible_enp0s8'
+  tasks:
+    # - debug: var=hostvars
 
     - name: Write inventory
       template:
         src:  vagrant-inventory.j2
         dest: ./inventory/vagrant
+        backup: yes

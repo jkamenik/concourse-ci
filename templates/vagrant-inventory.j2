@@ -1,33 +1,30 @@
 ## Generated with generate-vagrant-inventory.yml
 
-{%- set web_hostname = ssh_config.results[0].stdout_lines[1].split(' ') | last %}
+{%- set web_hostname = hostvars['web'][default_interface_name]['ipv4']['address'] %}
 {%- set web_user     = ssh_config.results[0].stdout_lines[2].split(' ') | last %}
-{%- set web_port     = ssh_config.results[0].stdout_lines[3].split(' ') | last %}
 {%- set web_key      = ssh_config.results[0].stdout_lines[7].split(' ') | last %}
 
-{%- set worker_hostname = ssh_config.results[1].stdout_lines[1].split(' ') | last %}
+{%- set worker_hostname = hostvars['worker'][default_interface_name]['ipv4']['address'] %}
 {%- set worker_user     = ssh_config.results[1].stdout_lines[2].split(' ') | last %}
-{%- set worker_port     = ssh_config.results[1].stdout_lines[3].split(' ') | last %}
 {%- set worker_key      = ssh_config.results[1].stdout_lines[7].split(' ') | last %}
 
+
 [concourse:vars]
-tsa_hostname=web
-default_interface_name="ansible_foo"
+tsa_ip={{ web_hostname }}
 ## You can override others values as well.
 # docker_version="*"
-# concourse_version="concourse/concourse"
 # concourse_user="concourse"
 # concourse_password="changeme"
 
 [web]
-web ansible_port={{web_port}} ansible_ssh_host={{web_hostname}}
+web ansible_ssh_host={{web_hostname}}
 
 [web:vars]
 ansible_user={{web_user}}
 ansible_ssh_private_key_file={{web_key}}
 
 [worker]
-worker ansible_port={{worker_port}} ansible_ssh_host={{worker_hostname}}
+worker ansible_ssh_host={{worker_hostname}}
 
 [worker:vars]
 ansible_user={{worker_user}}

@@ -1,16 +1,11 @@
 ---
 # the file containing the defaults
 
-default_interface: "{{ hostvars[inventory_hostname][default_interface_name] }}"
-default_interface_ipv4: "{{ default_interface['ipv4']['address'] }}"
-
-tsa_default_interface_ip: "{{ hostvars[tsa_hostname][default_interface_name]['ipv4']['address'] }}"
-
 concourse_binary_version: 2.5.1
 concourse_version: concourse/concourse:{{ concourse_binary_version }}
 concourse_user: concourse
 concourse_password: changeme
-concourse_url: "http://{{ default_interface_ipv4 }}"
+concourse_url: "http://{{ tsa_ip }}"
 concourse_install_path: /usr/local/share/concourse
 concourse_exec_path: /usr/local/bin/concourse
 concourse_keys_path: "{{ concourse_install_path }}/keys"
