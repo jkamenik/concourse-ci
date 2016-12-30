@@ -59,8 +59,10 @@ fly -t <team-name> login -c http://<concourse-ip> -n <team-name>
 Some sample pipelines are in the pipelines directory.  Load them as follows:
 
 ```bash
-$ fly -t <team-name> set-pipeline -p <pipeline-name> -c pipelines/<pipeline-to-load>.yml
+$ fly -t <team-name> set-pipeline -p <pipeline-name> -c pipelines/<pipeline-to-load>.yml -l pipelines/private.yml
 ```
+
+Note: `-l pipelines/private.yml` is the way to load private and secure variables into the pipeline.  It is not provided as part of this repo.
 
 ## Debug internal problems
 
