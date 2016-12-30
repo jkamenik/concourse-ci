@@ -7,6 +7,11 @@ resource_types:
     source:
       repository: vito/git-branch-heads-resource
 
+  - name: bitbucket-notify
+    type: docker-image
+    source:
+      repository: karunamon/concourse-resource-bitbucket
+
 resources:
   - name: concourse-pr-test
     type: git-branch-heads
@@ -14,6 +19,13 @@ resources:
       uri: https://bitbucket.org/jkamenik-fourv/concourse-pr-test.git
       branches:
         - CRPI-*
+  # - name: bitbucket-notify
+  #   type: bitbucket-notify
+  #   source:
+  #     bitbucket_url: https://bitbucket.org/
+  #     bitbucket_username: {{bitbucket_username}}
+  #     bitbucket_password: {{bitbucket_password}}
+  #     debug: true
 
 jobs:
   - name: concourse-pr-test
@@ -22,5 +34,21 @@ jobs:
       - get: concourse-pr-test
         trigger: true
         version: every
+
+      # - put: bitbucket-notify
+      #   params:
+      #     build_status: INPROGRESS
+      #     repo: concourse-pr-test
+
       - task: unit
         file: concourse-pr-test/ci/unit.yml
+        # on_success:
+        #   put: bitbucket-notify
+        #   params:
+        #     build_status: SUCCESSFUL
+        #     repo: testing-repo
+        # on_failure:
+        #   put: bitbucket-notify
+        #   params:
+        #     build_status: FAILED
+        #     repo: testing-repo
