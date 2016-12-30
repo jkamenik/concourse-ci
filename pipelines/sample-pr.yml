@@ -13,6 +13,11 @@ resource_types:
       repository: karunamon/concourse-resource-bitbucket
 
 resources:
+  - name: time
+    type: time
+    source:
+      interval: 1m
+
   - name: concourse-pr-test
     type: git-branch-heads
     source:
@@ -35,6 +40,9 @@ jobs:
         trigger: true
         version: every
 
+      - get: time
+        trigger: false
+
       # - put: bitbucket-notify
       #   params:
       #     build_status: INPROGRESS
@@ -52,3 +60,6 @@ jobs:
         #   params:
         #     build_status: FAILED
         #     repo: testing-repo
+
+      - task: integration
+        file: concourse-pr-test/ci/integration.yml
