@@ -4,6 +4,14 @@
     dest: "{{ concourse_exec_path }}"
     mode: 0755
 
+- name: Create concourse paths
+  file:
+    dest: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ concourse_install_path }}"
+    - "{{ concourse_keys_path }}"
+
 - name: Install keys
   copy:
     src: "./keys/{{ item }}"
