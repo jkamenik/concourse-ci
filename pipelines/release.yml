@@ -1,0 +1,148 @@
+---
+# A builder of a full release pipeline
+resources:
+  - name: time
+    type: time
+    source:
+      interval: 1m
+
+  - name: gs-management-platform-repo
+    type: git
+    source:
+      uri: https://bitbucket.org/jkamenik-fourv/concourse-pr-test.git
+      branch: release-1.0
+  - name: gs-models-repo
+    type: git
+    source:
+      uri: https://bitbucket.org/jkamenik-fourv/concourse-pr-test.git
+      branch: release-1.0
+  - name: gs-core-repo
+    type: git
+    source:
+      uri: https://bitbucket.org/jkamenik-fourv/concourse-pr-test.git
+      branch: release-1.0
+  - name: gs-cyber-repo
+    type: git
+    source:
+      uri: https://bitbucket.org/jkamenik-fourv/concourse-pr-test.git
+      branch: release-1.0
+  - name: db-deployment-repo
+    type: git
+    source:
+      uri: https://bitbucket.org/jkamenik-fourv/concourse-pr-test.git
+      branch: release-1.0
+  - name: front-end-repo
+    type: git
+    source:
+      uri: https://bitbucket.org/jkamenik-fourv/concourse-pr-test.git
+      branch: release-1.0
+  - name: gs-web-api-repo
+    type: git
+    source:
+      uri: https://bitbucket.org/jkamenik-fourv/concourse-pr-test.git
+      branch: release-1.0
+  - name: gs-deployment-repo
+    type: git
+    source:
+      uri: https://bitbucket.org/jkamenik-fourv/concourse-pr-test.git
+      branch: release-1.0
+
+jobs:
+  - name: gs-management-platform
+    plan:
+      - get: gs-management-platform-repo
+        trigger: true
+      - get: time
+        trigger: false
+      - task: unit
+        file: gs-management-platform-repo/ci/unit.yml
+        
+  - name: gs-models
+    plan:
+      - get: gs-models-repo
+        trigger: true
+      - get: time
+      - task: unit
+        file: gs-models-repo/ci/unit.yml
+
+  - name: gs-core
+    plan:
+      - aggregate:
+        - get: gs-core-repo
+          trigger: true
+        - get: gs-management-platform-repo
+          trigger: true
+          passed:
+            - gs-management-platform
+        - get: gs-models-repo
+          trigger: true
+          passed:
+            - gs-models
+        - get: time
+      - task: unit
+        file: gs-core-repo/ci/unit.yml
+        
+  - name: gs-cyber
+    plan:
+      - aggregate:
+        - get: gs-cyber-repo
+          trigger: true
+        - get: gs-core-repo
+          trigger: true
+          passed:
+            - gs-core
+        - get: gs-models-repo
+          trigger: true
+          passed:
+            - gs-models
+      - task: unit
+        file: gs-cyber-repo/ci/unit.yml
+        
+  - name: db-deployment
+    plan:
+      - get: db-deployment-repo
+        trigger: true
+      - get: time
+      - task: unit
+        file: db-deployment-repo/ci/unit.yml
+        
+  - name: front-end
+    plan:
+      - get: front-end-repo
+        trigger: true
+      - get: time
+      - task: unit
+        file: front-end-repo/ci/unit.yml
+        
+  - name: gs-web-api
+    plan:
+      - get: gs-web-api-repo
+        trigger: true
+      - get: time
+      - task: unit
+        file: gs-web-api-repo/ci/unit.yml
+        
+  - name: gs-deployment-repo
+    plan:
+      - aggregate:
+        - get: gs-deployment-repo
+          trigger: true
+        - get: gs-cyber-repo
+          trigger: true
+          passed:
+            - gs-cyber
+        - get: front-end-repo
+          trigger: true
+          passed:
+            - front-end
+        - get: gs-web-api-repo
+          passed:
+            - gs-web-api
+          trigger: true
+        - get: db-deployment-repo
+          trigger: true
+          passed:
+            - db-deployment
+        - get: time
+      - task: unit
+        file: gs-deployment-repo/ci/unit.yml
