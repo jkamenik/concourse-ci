@@ -12,10 +12,10 @@
         - web
         - worker
 
-    - name: add web host
+    - name: add hosts
       add_host:
         hostname:         "{{ item['name'] }}"
-        groups:           "{{ item['name'] }}"
+        groups:           "{{ item['name'] }},needs_python"
         ansible_ssh_host: "{{ item.value.stdout_lines[1].split(' ') | last }}"
         ansible_user:     "{{ item.value.stdout_lines[2].split(' ') | last }}"
         ansible_port:     "{{ item.value.stdout_lines[3].split(' ') | last }}"
@@ -25,7 +25,15 @@
           value: "{{ ssh_config['results'][0] }}"
         - name: worker
           value: "{{ ssh_config['results'][1] }}"
-
+          
+- hosts: needs_python
+  gather_facts: no
+  become: yes
+  tasks:
+    # Ubuntu no longer comes with Python installed.  Fix this.
+    - name: install python
+      raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+        
 # Gather facts
 - hosts: web
 - hosts: worker
